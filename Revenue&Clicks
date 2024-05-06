@@ -1,0 +1,39 @@
+#Calculate the minimum monthly revenue, maximum monthly revenue, average monthly revenue,
+and standard deviation of monthly revenue for each product
+
+with monthly_revs As (
+    Select 
+        Date_trunc('month', s.Orderdate) as Order_month,
+        p.productName, 
+        Sum(s.Revenue) As revenue,
+    From products p
+    Join subscriptions s On 
+    p.ProductId = s.ProductId
+    where s.orderDate Between '2022-01-01' and '2022-12-31'
+    Group by date_trunc('month', s.orderDate),
+        p.ProductName)
+
+    Select
+        productName, 
+        min(revenue) as min_rev,
+        max(revenue) As max_rev,
+        avg(REVENUE) as avg_rev,
+        stddev(REVENUE) as std_dev_rev
+    From monthly_revs
+    Group by productName;
+    
+#Distribution of users across the number of times the email
+link was clicked per user
+
+with track_clicks as (
+    Select 
+    count(*) as num_link_clicks,
+    userid
+From frontendeventlog fel
+where eventid = 5
+group by USERID)
+
+select 
+    num_link_clicks, count(*) as num_users
+from track_clicks
+group by num_link_clicks;
