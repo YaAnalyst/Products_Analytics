@@ -1,0 +1,12 @@
+#Find out groups of customers to offer a new product
+
+select
+    customerid, 
+    count(productid) as num_products,
+    sum(numberofusers) as total_users, 
+    case When sum(NUMBEROFUSERS) >=5000 Then 1
+        when count(productid) = 1 Then 1
+        Else 0
+    end as upsell_opportunity
+From subscriptions
+group by customerid;
