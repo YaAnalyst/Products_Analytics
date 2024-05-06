@@ -1,0 +1,25 @@
+#Tracking activity on the Customer Support page
+
+Select 
+     userid, 
+     Sum(Case 
+            when fl.eventid = 1 Then 1 
+            else 0 
+            end) as ViewedHelpCenterPage,
+        Sum (Case 
+                when fl.eventid = 2 Then 1
+                else 0
+                end) as ClickedFAQs,
+        Sum (Case 
+                when fl.eventid = 3 Then 1
+                else 0
+                end) as ClickedContactSupport,
+        Sum(Case 
+                when fl.eventid = 4 Then 1
+                else 0
+                end) as SubmittedTicket                   
+from frontendeventlog fl
+join frontendeventdefinitions fd
+        on fl.EVENTID = fd.EVENTID
+        where eventtype = 'Customer Support'
+group by userid;
