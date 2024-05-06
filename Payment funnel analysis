@@ -1,0 +1,31 @@
+#Count the number of subscriptions in each payment stage 
+
+with 
+	max_status_reached as (
+		select 
+	subscriptionid, max(statusid) as Maxstatus
+		from paymentstatuslog
+		group by subscriptionid
+	), 
+	paymentstages as ( 
+		Select
+			sub.SUBSCRIPTIONID,
+			case when maxstatus = 1 then 'PaymentWidgetOpened'
+		when maxstatus = 2 then 'PaymentEntered'
+		when maxstatus = 3 and currentstatus = 0 then 'User Error with Payment Submission'
+		when maxstatus = 3 and currentstatus != 0 then 'Payment Submitted'
+		when maxstatus = 4 and currentstatus = 0 then 'Payment Processing Error with Vendor'
+		when maxstatus = 4 and currentstatus != 0 then 'Payment Success'
+		when maxstatus = 5 then 'Complete'
+		when maxstatus is null then 'User did not start payment process'
+		end as paymentfunnelstage
+		From subscriptions sub
+		Left Join max_status_reached m On 
+				sub.subscriptionid = m.subscriptionid
+				)
+
+	Select
+			paymentfunnelstage,
+			count(subscriptionid) as subscriptions
+	from paymentstages
+	group by paymentfunnelstage;
