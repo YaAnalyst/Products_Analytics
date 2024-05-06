@@ -1,0 +1,22 @@
+#Count the number of active subscriptions that 
+will expire in each year, combining 2 products tables
+
+With all_subscriptions as(
+select *
+from subscriptionsProduct1 sp1
+where active = 1
+
+union 
+  select * 
+  from subscriptionsProduct2 sp2
+  where active = 1
+  )
+
+select
+	date_trunc('year', expirationdate) as exp_year, 
+	count(*) as subscriptions
+from 
+	all_subscriptions
+group by 
+	date_trunc('year', expirationdate);
+
