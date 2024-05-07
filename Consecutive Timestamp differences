@@ -1,0 +1,4 @@
+#Calculate the time difference between each status timestamp
+in order to show how long the user was in each status 
+before moving to the next one.
+
