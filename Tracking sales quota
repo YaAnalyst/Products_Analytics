@@ -1,0 +1,17 @@
+#Calculate the Running_total of sales revenue and 
+% of quota reached for each sales employee on each date.
+
+Select
+    salesemployeeid,
+    saledate,
+    saleamount,
+    Sum(saleamount) over (Partition by salesemployeeid
+    Order by saledate) as Running_Total,
+    cast(Sum(saleamount) 
+            over (Partition by salesemployeeid
+    Order by saledate) as float)
+    /quota as Percent_quota
+from sales s
+join employees e on
+    s.SALESEMPLOYEEID = e.EMPLOYEEID
+order by salesemployeeid, saledate;
