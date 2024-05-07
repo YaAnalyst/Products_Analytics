@@ -2,3 +2,13 @@
 in order to show how long the user was in each status 
 before moving to the next one.
 
+Select 
+    StatusMovementId,
+    SubscriptionId,
+    StatusId, 
+    MovementDate,
+    lead(MOVEMENTDATE,1) Over (Partition by subscriptionid Order by movementdate) 
+        as NextStatusMovementDate,
+    lead(MOVEMENTDATE,1) Over (Partition by subscriptionid Order by movementdate) - movementdate as TimeinStatus
+From PaymentStatusLog ps
+Where subscriptionId = 38844;
