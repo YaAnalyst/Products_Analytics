@@ -1,0 +1,12 @@
+#Create an email list that includes Sales department employees, managers names
+and contact email adress (managers if available, if not, lets use employees email directly)
+
+Select
+    employees.employeeid, 
+    employees.name as employee_name,
+    manager.name as manager_name,
+    coalesce(manager.email, employees.EMAIL) as contact_email
+from employees 
+left join employees manager on
+    employees.MANAGERID = manager.EMPLOYEEID
+where employees.department = 'Sales';
