@@ -1,0 +1,28 @@
+#Calculate the percent of canceled subscriptions
+that reperted as 'Expensive'.
+
+with all_cancelation_reasons as(
+Select 
+subscriptionid, cancelationreason1 as cancelationreason
+from cancelations
+
+union all 
+    Select 
+    subscriptionid, cancelationreason2 as cancelationreason
+    from cancelations
+
+union all 
+    Select 
+    subscriptionid, cancelationreason3 as cancelationreason
+    from cancelations
+
+)
+
+select 
+    cast(count(
+        case when cancelationreason = 'Expensive' 
+        then subscriptionid end) as float)
+    /count(distinct subscriptionid) as percent_expensive
+from    
+    all_cancelation_reasons
+;
